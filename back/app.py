@@ -1,8 +1,10 @@
 import warnings
 
-import subprocess
-
+import loadData as data
 import database
+
+import pandas as pd
+import debugTools as debug
 
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
@@ -13,13 +15,25 @@ warnings.filterwarnings("ignore")
 app = Flask(__name__)
 cors = CORS(app)
 
+
 items = []
 
 @app.route('/api/v1.0/etudiant', methods=['GET'])
 def get_etudiants():
-    database.getetudiants()
+    debug.timelog("calling get_etudiants")
+
+    isAttributesNull = data.getIsAttributesNull()
+    isOriginalTitleNull = data.getIsOriginalTitleNull()
+    isTypesNull = data.getIsTypesNull()
+
+    datadict = {
+        "isAttributesNull": isAttributesNull,
+        "isOriginalTitleNull": isOriginalTitleNull,
+        "isTypesNull": isTypesNull
+    }
+
+    database.getetudiants(datadict)
     result = database.resultsExportEtudiants
-    print (result)
     return jsonify({'item': result}), 201
 
 
