@@ -1,13 +1,14 @@
 import debugTools as debug
 import pandas as pd
+import numpy as np
 
 loadNameBasics = False
 loadTitleAkas = False
 loadTitleBasics = True
-loadTitleCrew = True
+loadTitleCrew = False
 loadTitleEpisode = False
 loadTitlePrincipals = False
-loadTitleRatings = False
+loadTitleRatings = True
 
 # load sequence
 # raw data
@@ -25,6 +26,8 @@ if loadNameBasics:
           "knownForTitles": "object",
           }
       )
+  nameBasics["primaryProfession"] = nameBasics["primaryProfession"].str.split(",")
+  nameBasics["knownForTitles"] = nameBasics["knownForTitles"].str.split(",")
   debug.timelog("'name.basics.tsv' OK")
 else:
   nameBasics = pd.DataFrame()
@@ -47,6 +50,8 @@ if loadTitleAkas:
           "isOriginalTitle": "object"
           }
       )
+  titleAkas["types"] = titleAkas["types"].str.split(",")
+  titleAkas["attributes"] = titleAkas["attributes"].str.split(",")
   debug.timelog("'title.akas.tsv' loaded")
 else:
   titleAkas = pd.DataFrame()
@@ -67,10 +72,13 @@ if loadTitleBasics:
           "startYear": "object",
           "endYear": "object",
           "runtimeMinutes": "object",
-          "genre": "object"
+          "genres": "object"
           }
       )
   debug.timelog("'title.basics.tsv' loaded")
+  titleBasics.replace("\\N", None, inplace=True)
+  titleBasics["genres"] = titleBasics["genres"].str.split(",")
+  debug.timelog("'title.basics.tsv' processed")
 else:
   titleBasics = pd.DataFrame()
   debug.timelog("'title.basics.tsv' created empty")
@@ -88,6 +96,10 @@ if loadTitleCrew:
           }
       )
   debug.timelog("'title.crew.tsv' loaded")
+  titleCrew.replace("\\N", None, inplace=True)
+  titleCrew["directors"] = titleCrew["directors"].str.split(",")
+  titleCrew["writers"] = titleCrew["writers"].str.split(",")
+  debug.timelog("'title.crew.tsv' processed")
 else:
   titleCrew = pd.DataFrame()
   debug.timelog("'title.crew.tsv' created empty")
@@ -138,14 +150,39 @@ if loadTitleRatings:
       sep="\t",
       dtype={
           "tconst": "object",
-          "averageRatings": "object",
+          "averageRating": "object",
           "numVotes": "object"
           }
       )
   debug.timelog("'title.ratings.tsv' loaded")
+  titleRatings.replace("\\N", "0", inplace=True)
+  titleRatings.fillna("0", inplace=True)
+  debug.timelog("'title.ratings.tsv' processed")
+  
 else:
   titleRatings = pd.DataFrame()
   debug.timelog("'title.ratings.tsv' created empty")
+
+# processed
+if loadTitleBasics and loadTitleRatings:
+  debug.timelog("'titleWithRatings' merging")
+  titleWithRatings = pd.merge(titleBasics, titleRatings, how="left", on="tconst")
+  titleWithRatings["startYear"].fillna(2099, inplace=True)
+  titleWithRatings["averageRating"].fillna("0", inplace=True)
+  debug.timelog("'titleWithRatings' merged")
+
+  titleSortByRatings = titleWithRatings[
+    ["tconst", "primaryTitle", "originalTitle", "startYear", "genres", "averageRating"]
+  ].sort_values(by=["averageRating", "startYear"], ascending=[False, False])
+  print(titleSortByRatings.head(5))
+
+  titleSortByYear = titleWithRatings[
+    ["tconst", "primaryTitle", "originalTitle", "startYear", "genres", "averageRating"]
+  ].sort_values(by=["startYear", "averageRating"], ascending=[False, False])
+  print(titleSortByYear.head(5))
+else:
+  titleRatings = pd.DataFrame()
+  debug.timelog("titleWithRatings created empty")
 
 
 # getters
