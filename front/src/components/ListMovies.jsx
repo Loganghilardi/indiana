@@ -12,7 +12,7 @@ export default function ListMovies() {
     fetch(`${API_URL}/movies`)
       .then(handleResponse)
       .then((data) => {
-        const res_movies = data.content;
+        const res_movies = data.item;
         console.log(res_movies);
         setLoading(false);
         setMovies(res_movies);
