@@ -166,7 +166,7 @@ else:
 # processed
 if loadTitleBasics and loadTitleRatings:
   debug.timelog("'titleWithRatings' merging")
-  titleWithRatings = pd.merge(titleBasics, titleRatings, how="left", on="tconst")
+  titleWithRatings = pd.merge(titleBasics.loc[titleBasics["titleType"].str.contains("movie")], titleRatings, how="left", on="tconst")
   titleWithRatings["startYear"].fillna(2099, inplace=True)
   titleWithRatings["averageRating"].fillna("0", inplace=True)
   debug.timelog("'titleWithRatings' merged")
@@ -178,9 +178,6 @@ if loadTitleBasics and loadTitleRatings:
   titleSortByYear = titleWithRatings[
     ["tconst", "primaryTitle", "originalTitle", "startYear", "genres", "averageRating"]
   ].sort_values(by=["startYear", "averageRating"], ascending=[False, False]).reset_index()
-else:
-  titleRatings = pd.DataFrame()
-  debug.timelog("titleWithRatings created empty")
 
 
 # getters
