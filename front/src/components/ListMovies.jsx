@@ -13,17 +13,18 @@ export default function ListMovies() {
       .then(handleResponse)
       .then((data) => {
         const res_movies = data.item;
-        console.log(res_movies);
         setLoading(false);
-        setMovies(res_movies);
+        setMovies(res_movies[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log(error.errorMessage);
+        setLoading(false);
       });
-    // .catch((error) => {
-    //   console.log(error.errorMessage);
-    //   setLoading(false);
-    // });
+    setLoading(false);
   }, []);
 
-  if (loading && movies == []) {
+  if (loading) {
     return (
       <div className="loading-container">
         <Loading />
@@ -48,7 +49,7 @@ export default function ListMovies() {
         </thead>
         <tbody>
           {movies.map((movie) => (
-            <tr key={movie.primaryTitle}>
+            <tr key={movie.tconst}>
               <td>
                 <span>{movie.primaryTitle}</span>
               </td>
