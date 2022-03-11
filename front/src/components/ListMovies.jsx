@@ -21,7 +21,7 @@ export default function ListMovies() {
     //   console.log(error.errorMessage);
     //   setLoading(false);
     // });
-  });
+  }, []);
 
   if (loading && movies == []) {
     return (
@@ -48,21 +48,21 @@ export default function ListMovies() {
         </thead>
         <tbody>
           {movies.map((movie) => (
-            <tr key={movie.title}>
+            <tr key={movie.primaryTitle}>
               <td>
-                <span>{movie.title}</span>
+                <span>{movie.primaryTitle}</span>
               </td>
               <td>
-                <span>{movie.titleOrigine}</span>
+                <span>{movie.originalTitle}</span>
               </td>
               <td>
-                <span>{movie.year}</span>
+                <span>{movie.startYear}</span>
               </td>
               <td>
-                <span>{movie.genre}</span>
+                <span>{movie.genres}</span>
               </td>
               <td>
-                <span>{movie.rating}</span>
+                <span>{movie.averageRating}</span>
               </td>
             </tr>
           ))}

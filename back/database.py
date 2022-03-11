@@ -10,6 +10,7 @@ def getMoviesByRating(start, perPage):
     df = data.getTitleSortByRatings()
     df = df.loc[start:start + perPage - 1]
 
+    print(df)
     df.to_json(r'test.json', orient="columns")
 
     json_file_path = "test.json"
