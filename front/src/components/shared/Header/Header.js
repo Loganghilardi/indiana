@@ -9,7 +9,7 @@ const Header = () => {
             <Link to="/">
                 {/* <img src={logo} alt="logo" className="Header-logo" /> */}
             </Link>
-            <div className="h1 text-center">School App</div>
+            <div className="h1 text-center">Ipssi App</div>
         </div>
     );
 }
