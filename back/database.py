@@ -1,16 +1,34 @@
 import pandas as pd
 import debugTools as debug
+import loadData as data
 
-debug.timelog("'database.py' start")
+results = []
+def getetudiants():
 
-# db = MySQLdb.connect("localhost", "root", "root", "bd_notes")
+    getMovies(5000, 20)
 
-resultsExportEtudiants = []
-def getetudiants(datadict):
+    # #test 1
+    # titleBasics = data.getTitleBasics()
+    # titleCrew = data.getTitleCrew()
+    # pTitleBasics = titleBasics.loc[0:19, ["tconst", "primaryTitle", "originalTitle", "titleType", "genres"]]
+    # fTitleBasics = pd.merge(pTitleBasics, titleCrew, how='left', on='tconst')
 
-    debug.timelog("isTypesNull count:" + str(datadict["isTypesNull"].count()))
-    debug.timelog("isAttributesNull count:" + str(datadict["isAttributesNull"].count()))
-    debug.timelog("isOriginalTitleNull count:" + str(datadict["isOriginalTitleNull"].count()))
+    # test 2
+    # titleCrew = data.getTitleCrew()
+    # processedCrew = titleCrew[titleCrew["directors"].str.contains(",")].reset_index().loc[1:50]
+    # processedCrew["directors"] = processedCrew["directors"].str.split(",")
+    # processedCrew["writers"] = processedCrew["writers"].str.split(",")
+    # # calc = processedCrew[processedCrew["writers"].str.contains("\\N")]
+    # debug.timelog("Count:" + str(processedCrew.count()))
+
+    # test 3
+    # df = pd.DataFrame({
+    #     "a": [1,2,3,4,5],
+    #     "b": ["hello", "there", ["hehe", "haha"], "welcome", "bonjour"]
+    # })
+    # print(df)
+    # print(df.dtypes)
+    # print(df.loc[2, "b"][1])
 
     item = {
         "id_etudiant": 1,
@@ -19,59 +37,32 @@ def getetudiants(datadict):
         "nom": "there"
     }
 
-    del resultsExportEtudiants[:]
-    resultsExportEtudiants.append(item)
+    del results[:]
+    results.append(item)
 
-    return resultsExportEtudiants
+    return results
 
-# cursor = db.cursor()
-# global resultsExportEtudiants
-# resultsExportEtudiants = []
+def getMovies(start, perPage):
+    debug.timelog("getMovies start")
+    titleBasics = data.getTitleBasics()
+    debug.timelog("getTitleBasics()")
+    titleCrew = data.getTitleCrew()
+    debug.timelog("getTitleCrew()")
 
-# def getetudiants():
+    pTitleBasics = titleBasics[titleBasics["titleType"].str.contains("movie")].reset_index().loc[
+        start:start + perPage,
+        ["tconst", "primaryTitle", "originalTitle", "titleType", "genres"]
+        ]
+    debug.timelog("pTitleBasics")
     
-#     debug.timelog("isTypesNull count:" + str(isTypesNull.count()))
-#     debug.timelog("isAttributesNull count:" + str(isAttributesNull.count()))
-#     debug.timelog("isOriginalTitleNull count:" + str(isOriginalTitleNull.count()))
+    fTitleBasics = pd.merge(pTitleBasics, titleCrew, how='left', on='tconst')
+    debug.timelog("fTitleBasics")
 
-#     del resultsExportEtudiants[:]
-#     sql = "SELECT * FROM t_etudiant"
-#     try:
-#         cursor.execute(sql)
-#         results = cursor.fetchall()
-#         for row in results:
-#             item = {
-#                 "id_etudiant": row[0],
-#                 "matricule": row[1],
-#                 "prenom": row[2],
-#                 "nom": row[3]
-#             }
-#             resultsExportEtudiants.append(item)
-#     except MySQLdb.Error as e:
-#         try:
-#             print ("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
-#             return None
-#         except IndexError:
-#             print ("MySQL Error: %s" % str(e))
-#             return None
-#         finally:
-#             cursor.close()
-#             db.close()
+    fTitleBasics["directors"] = fTitleBasics["directors"].str.split(",")
+    fTitleBasics["writers"] = fTitleBasics["writers"].str.split(",")
+    fTitleBasics["genres"] = fTitleBasics["genres"].str.split(",")
+    debug.timelog("formatting")
 
+    debug.timelog("fTitleBasics:")
+    print(fTitleBasics)
 
-# def createetudiant(etudiant):
-#     sql = "Insert into t_etudiant(matricule, nom, prenom) values('%s', '%s', '%s')" % (etudiant['matricule'], etudiant['nom'], etudiant['prenom'])
-#     try:
-#         cursor.execute(sql)
-#         db.commit()
-#     except MySQLdb.Error as e:
-#         try:
-#             print ("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
-#             return None
-#         except IndexError:
-#             db.rollback()
-#             print ("MySQL Error: %s" % str(e))
-#             return None
-#         finally:
-#             cursor.close()
-#             db.close()
