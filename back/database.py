@@ -5,12 +5,12 @@ import json
 
 results = []
 
-def getMoviesByRating(start, perPage):
+def getMoviesByRating(start, perPage, format):
     debug.timelog("getMoviesByRating start")
     df = data.getTitleSortByRatings()
-    df = df.loc[start:start + perPage - 1]
+    df = df.loc[df["titleType"].str.contains(format)]
+    df = df.reset_index().loc[start:start + perPage - 1]
 
-    print(df)
     df.to_json(r'test.json', orient="records")
 
     json_file_path = "test.json"

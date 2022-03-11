@@ -19,7 +19,7 @@ items = []
 @app.route('/api/v1.0/movies', methods=['GET'])
 def get_movies():
 
-    result = database.getMoviesByRating(51, 20)
+    result = database.getMoviesByRating(51, 20, "movie")
     return jsonify({'item': result}), 201
 
 
