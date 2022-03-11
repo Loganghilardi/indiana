@@ -16,18 +16,18 @@ cors = CORS(app)
 
 items = []
 
-@app.route('/api/v1.0/etudiant', methods=['GET'])
-def get_etudiants():
+@app.route('/api/v1.0/movies', methods=['GET'])
+def get_movies():
 
-    result = database.getetudiants()
+    result = database.getMoviesByRating(51, 20)
     return jsonify({'item': result}), 201
 
 
-@app.route('/api/v1.0/etudiant', methods=['POST'])
-def create_etudiant():
-    database.createetudiant(request.json)
+# @app.route('/api/v1.0/etudiant', methods=['POST'])
+# def create_etudiant():
+#     database.createetudiant(request.json)
 
-    return jsonify({'item': 'etudiant cree'}), 201
+#     return jsonify({'item': 'etudiant cree'}), 201
 
 
 if __name__ == '__main__':

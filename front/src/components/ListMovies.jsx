@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Loading from "./shared/Loading/Loading";
+import React, { useEffect, useState } from 'react';
+import Loading from './shared/Loading/Loading';
 import { API_URL } from '../config';
 import { handleResponse } from '../helpers';
 
@@ -16,14 +16,14 @@ export default function ListMovies() {
         console.log(res_movies);
         setLoading(false);
         setMovies(res_movies);
-      })
-      .catch((error) => {
-        console.log(error.errorMessage);
-        setLoading(false);
       });
+    // .catch((error) => {
+    //   console.log(error.errorMessage);
+    //   setLoading(false);
+    // });
   });
 
-  if (loading && movies==[]) {
+  if (loading && movies == []) {
     return (
       <div className="loading-container">
         <Loading />
@@ -47,7 +47,7 @@ export default function ListMovies() {
           </tr>
         </thead>
         <tbody>
-            {movies.map((movie)=>(
+          {movies.map((movie) => (
             <tr key={movie.title}>
               <td>
                 <span>{movie.title}</span>
@@ -65,7 +65,7 @@ export default function ListMovies() {
                 <span>{movie.rating}</span>
               </td>
             </tr>
-            ))}
+          ))}
         </tbody>
       </table>
     </div>

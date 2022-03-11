@@ -174,12 +174,10 @@ if loadTitleBasics and loadTitleRatings:
   titleSortByRatings = titleWithRatings[
     ["tconst", "primaryTitle", "originalTitle", "startYear", "genres", "averageRating"]
   ].sort_values(by=["averageRating", "startYear"], ascending=[False, False])
-  print(titleSortByRatings.head(5))
 
   titleSortByYear = titleWithRatings[
     ["tconst", "primaryTitle", "originalTitle", "startYear", "genres", "averageRating"]
   ].sort_values(by=["startYear", "averageRating"], ascending=[False, False])
-  print(titleSortByYear.head(5))
 else:
   titleRatings = pd.DataFrame()
   debug.timelog("titleWithRatings created empty")
@@ -206,3 +204,9 @@ def getTitlePrincipals():
 
 def getTitleRatings():
   return titleRatings
+
+def getTitleSortByRatings():
+  return titleSortByRatings
+
+def getTitleSortByYear():
+  return titleSortByYear
